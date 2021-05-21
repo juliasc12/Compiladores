@@ -1,0 +1,28 @@
+import java_cup.runtime.*;
+
+/*TERMINAIS*/
+terminal PTVIRG, MAIS, MENOS;
+terminal Integer INTEIRO;
+
+/*N TERMINAIS*/
+non terminal expr_ptv, expr_list; 
+non terminal Integer expr;
+
+expr_list ::=
+    expr_list expr_ptv
+    |expr_ptv;
+
+expr_ptv ::=
+    expr:e {: System.out.println("=" + e); :} PTVIRG;
+
+expr ::=
+    INTEIRO:n {: System.out.println("expr -> INTEIRO("+n+") MAIS expr"); :}  MAIS expr:e
+    {: RESULT = new Integer(n.intValue() + e.intValue()); :}
+
+    | INTEIRO:n MENOS expr:e
+    {: RESULT = new Integer(n.intValue() - e.intValue()); :}
+
+    | INTEIRO:n 
+    {: System.out.println("expr -> INTEIRO("+n+")"); 
+    RESULT = new Integer(n.intValue()); :}
+;

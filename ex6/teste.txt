@@ -1,0 +1,9 @@
+float altura
+int i
+i = i/5.89;
+cout << “Informe altura e peso”
+altura = 3/9E+4;
+while(i <= 10){
+Imc1 = 1.98
+i = i + 1E-3
+}

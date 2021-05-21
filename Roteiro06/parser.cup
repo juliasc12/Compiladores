@@ -1,0 +1,78 @@
+import java.util.Scanner;
+import java_cup.runtime.*;
+
+terminal PTVIRG, MAIS, MENOS, DIV, MULT, MOD, APAR, FPAR, IDENT;
+terminal Double INTEIRO, REAL;
+
+non terminal Double expr_list, expr_ptv;
+non terminal Double expr;
+
+expr_list ::=
+	expr_list expr_ptv
+  | expr_ptv;
+
+expr_ptv ::= 
+	expr:e {:
+                    System.out.println("expr_ptv -> expr PTVIRG");
+                    System.out.println("= " + e);  
+		:} PTVIRG;
+
+expr ::= INTEIRO:n MAIS expr:e
+	{:  
+                System.out.println("Deseja alterar o valor da variável? S/N");
+                Scanner scanner = new Scanner(System.in);
+                String resp = scanner.nextLine();
+                
+                double identificador = e.doubleValue();
+                if(resp.equalsIgnoreCase("S")){
+                    System.out.println("Informe o novo valor da variável: ");
+                    identificador = scanner.nextDouble();
+                }
+
+		System.out.println("expr -> INTEIRO("+n+") MAIS expr("+identificador+")");
+		RESULT = new Double(n.doubleValue() + identificador);
+        :}
+        | INTEIRO:n MENOS expr:e
+	{: 
+		System.out.println("expr -> INTEIRO("+n+") MENOS expr("+e+")");
+		RESULT = new Double(n.doubleValue() - e.doubleValue()); 
+	:}
+        | INTEIRO:n MULT expr:e
+	{: 
+		System.out.println("expr -> INTEIRO("+n+") MULT expr("+e+")");
+		RESULT = new Double(n.doubleValue() * e.doubleValue()); 
+	:}
+        | INTEIRO:n DIV expr:e
+	{: 
+                double identificador = e.doubleValue();
+                if(identificador == 0){
+                    System.out.println("O denominador não pode ser 0, por favor digite outro valor!");
+                    Scanner scanner = new Scanner(System.in);
+                    identificador = scanner.nextDouble();
+                }
+
+		System.out.println("expr -> INTEIRO("+n+") DIV expr("+identificador+")");
+		RESULT = new Double(n.doubleValue() / identificador); 
+	:}
+        | REAL:n MOD expr:e
+	{: 
+		System.out.println("expr -> REAL("+n+") MOD expr("+e+")");
+		RESULT = new Double(n % e.doubleValue()); 
+	:}
+        | INTEIRO:n
+	{:  
+		System.out.println("expr -> INTEIRO"+n);
+		RESULT = new Double(n.doubleValue()); 
+	:}
+        | REAL:n
+	{:  
+		System.out.println("expr -> REAL"+n);
+		RESULT = new Double(n); 
+	:}
+        | IDENT:n
+	{:	System.out.println("expr -> IDENT");
+                System.out.println("Informe o valor da variável("+n+"): ");
+                Scanner scanner = new Scanner(System.in);
+                double identificador = scanner.nextDouble();
+		RESULT = identificador;
+	:};
